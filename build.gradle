@@ -148,8 +148,8 @@ license {
     strictCheck = true
 //    license.ext["year"] = Calendar.getInstance().get(Calendar.YEAR)
     license.ext["year"] = 2021
-    license.ext["name"] = project.findProperty("author")
-    license.ext["email"] = project.findProperty("email")
+    license.ext["name"] = 'rising3'
+    license.ext["email"] = 'michio.nakagawa@gmail.com'
 }
 
 semver {
