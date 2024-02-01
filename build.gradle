@@ -7,7 +7,7 @@ buildscript {
         mavenCentral()
     }
     dependencies {
-        classpath "com.github.rising3:semver-gradle-plugin:0.8.2"
+        classpath files("build/libs/semver-gradle-plugin-0.0.0.jar")
     }
 }
 
@@ -22,7 +22,6 @@ plugins {
     id "com.diffplug.spotless" version "6.13.0"
     id "eclipse"
     id "idea"
-//    id 'com.github.rising3.semver' version '0.8.2'
 }
 
 apply plugin: "com.github.rising3.semver"

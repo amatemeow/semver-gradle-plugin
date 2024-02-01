@@ -37,7 +37,7 @@ class ChangeLogParser {
     /**
      *
      */
-    private static final REGEX_TITLE = /^(?<type>[a-z]+)(?<ticket>-?[0-9]+|)(?<scope>\([a-z]+\)|)(?<bc>!?|): (?<description>.+)\n?$/
+    private static final REGEX_TITLE = /^(?<type>\w+[a-zA-Z])(?<delimiter>-?)(?<ticket>[0-9]+|)(?<scope>\([a-zA-Z]+\)|)(?<bc>!?|): (?<description>.+)\n?$/
 
     /**
      *
