@@ -74,8 +74,8 @@ class MarkdownChangeLogFormatter implements ChangeLogFormatter {
      */
     private String message(Matcher m, String hash) {
         switch (m.groupCount()) {
-            case 4:     // type
-                "**${m.group('type')}${m.group('scope')}${m.group('bc')}:** ${m.group('description')} (${hash})"
+            case 5:     // type
+                "**${m.group('type')}${m.group("ticket")}${m.group('scope')}${m.group('bc')}:** ${m.group('description')} (${hash})"
                 break
             case 2:     // footer
                 "**${m.group('bc')}:** ${m.group('description')} (${hash})"
