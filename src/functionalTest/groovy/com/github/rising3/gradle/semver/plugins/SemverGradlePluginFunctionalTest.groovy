@@ -795,6 +795,39 @@ class SemverGradlePluginFunctionalTest extends Specification {
         actual.contains("info New version: 0.1.1")
     }
 
+    def "Should run semver task with file, changelog(FILE) and conventional commits with ticket postfix"() {
+        given:
+        ext.setTarget(Target.FILE)
+        ext.setChangeLog(ChangeLog.FILE)
+        gitRepo.writeFile(Project.DEFAULT_BUILD_FILE, ConfigurationTemplate.getBuild(ext))
+        gitRepo.writeFile(Project.GRADLE_PROPERTIES, '')
+        gitRepo.writeFile(SETTINGS_GRADLE, '')
+        gitRepo.writeFile(PACKAGE_JSON, ConfigurationTemplate.getPackage('0.1.0'))
+        gitRepo.writeFile(CHANGELOG_MD, '')
+        gitRepo.commit('README.md', 'Initial commit')
+        gitRepo.commit('README.md', 'refactor(runtime): drop support for Node 6')
+        gitRepo.commit('README.md', 'fix-1234: some fixes following ticket')
+        final runner = createRunner(['semver', '--conventional-commits'])
+
+        when:
+        final actual = runner.build().output
+
+        then:
+        git.log().size() == 4
+        git.tagList().size() == 1
+        git.tagList()[0].getName().contains("${ext.versionTagPrefix}0.1.1")
+
+        gradleProperties.getText().contains('0.1.1')
+        !gradlePropertiesBak.exists()
+        packageJson.getText().contains('0.1.1')
+        !packageJsonBak.exists()
+        changelogMd.exists()
+        changelogMd.getText().contains('# v0.1.1 (')
+        changelogMd.getText().contains('## Bug Fixes')
+        !changelogMdBak.exists()
+        actual.contains("info New version: 0.1.1")
+    }
+
     def "Should run semver task with dryrun, tag, changelog(FILE) and conventional commits"() {
         given:
         ext.setTarget(Target.TAG)
