@@ -795,10 +795,12 @@ class SemverGradlePluginFunctionalTest extends Specification {
         actual.contains("info New version: 0.1.1")
     }
 
-    def "Should run semver task with file, changelog(FILE) and conventional commits with ticket postfix"() {
+    def "Should run semver task with file, changelog(FILE) and custom type"() {
         given:
         ext.setTarget(Target.FILE)
         ext.setChangeLog(ChangeLog.FILE)
+        ext.setChangeLogTitle(Map.of('CUSTOM', 'Custom Changes', 'refactor', 'Refactoring'))
+        ext.setChangeLogOrder(new String[] {'CUSTOM', 'refactor'})
         gitRepo.writeFile(Project.DEFAULT_BUILD_FILE, ConfigurationTemplate.getBuild(ext))
         gitRepo.writeFile(Project.GRADLE_PROPERTIES, '')
         gitRepo.writeFile(SETTINGS_GRADLE, '')
@@ -806,8 +808,8 @@ class SemverGradlePluginFunctionalTest extends Specification {
         gitRepo.writeFile(CHANGELOG_MD, '')
         gitRepo.commit('README.md', 'Initial commit')
         gitRepo.commit('README.md', 'refactor(runtime): drop support for Node 6')
-        gitRepo.commit('README.md', 'fix-1234: some fixes following ticket')
-        final runner = createRunner(['semver', '--conventional-commits'])
+        gitRepo.commit('README.md', 'CUSTOM-123: allow provided config object to extend other configs')
+        final runner = createRunner(['semver', '--patch'])
 
         when:
         final actual = runner.build().output
@@ -823,7 +825,7 @@ class SemverGradlePluginFunctionalTest extends Specification {
         !packageJsonBak.exists()
         changelogMd.exists()
         changelogMd.getText().contains('# v0.1.1 (')
-        changelogMd.getText().contains('## Bug Fixes')
+        changelogMd.getText().contains('## Custom Changes')
         !changelogMdBak.exists()
         actual.contains("info New version: 0.1.1")
     }
